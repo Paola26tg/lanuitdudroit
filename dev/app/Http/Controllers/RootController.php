@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CustomMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -15,6 +16,7 @@ use App\Models\Partner;
 use App\Models\Attendee;
 use App\Models\Member;
 use App\Models\Gallery;
+use Mail;
 
 
 
@@ -30,10 +32,10 @@ class RootController extends Controller
     }
     public function logout()
     {
-    Auth::logout(); 
+    Auth::logout();
     Session::flush();
     Session::regenerateToken();
-    return redirect()->route('login'); 
+    return redirect()->route('login');
     }
 
     public function login(Request $request){
@@ -58,7 +60,7 @@ class RootController extends Controller
     {
         // Récupérer l'utilisateur actuellement connecté (l'administrateur)
     $admin = auth()->user();
-    
+
     // Vérifier si l'utilisateur est bien authentifié
     if ($admin) {
         // Afficher les informations du profil de l'administrateur
@@ -67,9 +69,9 @@ class RootController extends Controller
         // Rediriger vers la page de connexion si l'utilisateur n'est pas authentifié
         return redirect()->route('login');
     }
-       
+
     }
-    
+
     public function getDashboard(){
         $home = Home::get()->first();
         $totalPassEvents = Event::where('isEnable', false)->count();
@@ -79,14 +81,14 @@ class RootController extends Controller
         ->where('attendees.idEvent', $currentEvent->idEvent)
         ->orderByDesc('attendees.created_at')->get();
         $newAttendees = Attendee::whereDate('created_at', '>=', getCurrentWeek('start'))->orderByDesc('created_at')->get();
-        $attendeesPerEvent = Attendee::select(DB::raw('COUNT(idEvent)as attendee_per_event'))->groupBy('idEvent')->get(); 
+        $attendeesPerEvent = Attendee::select(DB::raw('COUNT(idEvent)as attendee_per_event'))->groupBy('idEvent')->get();
         return view('roots.home')
         ->withHome($home)
         ->withTotalPassEvents($totalPassEvents)
         ->withCurrentEvent( $currentEvent)
         ->withRecentAttendees( $recentAttendees)
         ->withNewAttendees($newAttendees)
-        ->withAttendeesPerEvent($attendeesPerEvent); 
+        ->withAttendeesPerEvent($attendeesPerEvent);
     }
 
     public function getHomeCustom(){
@@ -99,18 +101,18 @@ class RootController extends Controller
 
         $home = Home::get()->first();
         if(empty($home)){
-            $home = new Home();  
+            $home = new Home();
         }
          if($request->hasFile('banner') && $request->file('banner')->isValid()){
             $file = $request->file('banner');
             $path = $file->store('home','public');
-            $home->banner = $file->hashName(); 
+            $home->banner = $file->hashName();
         }
         $home->title = $request->title;
         $home->description = $request->description;
 
         return $home->save();
-       
+
     }
 
 
@@ -119,19 +121,19 @@ class RootController extends Controller
         $home = Home::get()->first();
         return view('roots.aboutCustom')
         ->withHome($home);
-        
+
     }
 
      public function updateAboutCustom(Request $request ){
 
         $home = Home::get()->first();
          if(empty($home)){
-            $home = new Home();  
+            $home = new Home();
         }
         if($request->hasFile('aboutCover') && $request->file('aboutCover')->isValid()){
             $file = $request->file('aboutCover');
             $path = $file->store('home','public');
-            $home->aboutCover = $file->hashName(); 
+            $home->aboutCover = $file->hashName();
         }
         $home->about = $request->about;
         $home->description = $request->description;
@@ -152,14 +154,14 @@ class RootController extends Controller
     public function storeEvent(Request $request){
 
         if($request->idEvent == null){
-        $event = new Event(); 
+        $event = new Event();
         $event->eventTitle = $request->subject;
         $event->description = $request->description;
 
         if($request->hasFile('eventCover') && $request->file('eventCover')->isValid()){
             $file = $request->file('eventCover');
             $path = $file->store('events','public');
-            $event->eventCover = $file->hashName(); 
+            $event->eventCover = $file->hashName();
         }
         $event->start = $request->date_deb;
         $event->end = $request->date_fin;
@@ -175,7 +177,7 @@ class RootController extends Controller
         if($request->hasFile('eventCover') && $request->file('eventCover')->isValid()){
             $file = $request->file('eventCover');
             $path = $file->store('events','public');
-            $event->eventCover = $file->hashName(); 
+            $event->eventCover = $file->hashName();
         }
         $event->start = $request->date_deb;
         $event->end = $request->date_fin;
@@ -195,7 +197,7 @@ class RootController extends Controller
         } catch (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             // Gérer l'exception si aucun enregistrement n'a été trouvé
             $errorMessage = 'Évènement introuvable.';
-            return redirect()->back()->with('errorMessage', $errorMessage);  
+            return redirect()->back()->with('errorMessage', $errorMessage);
         }
     }
 
@@ -210,7 +212,7 @@ class RootController extends Controller
 
         if($request->idCalendar == null){
 
-        $calendar = new Calendar(); 
+        $calendar = new Calendar();
 
         $calendar->idEvent = $request->idEvent;
         $calendar->subTitle = $request->activity;
@@ -258,7 +260,7 @@ class RootController extends Controller
         return $activities;
     }
 
-    
+
     public function getEventCalendarSpeakerList($calendarID){
         $home = Home::get()->first();
         $speakers = Speaker::join('events', 'events.idEvent', '=', 'speakers.idEvent')
@@ -294,7 +296,7 @@ class RootController extends Controller
 
         if($request->idSpeaker == null){
 
-        $speaker = new Speaker(); 
+        $speaker = new Speaker();
 
         $speaker->idEvent = $request->idEvent;
         $speaker->idCalendar = $request->idCalendar;
@@ -305,7 +307,7 @@ class RootController extends Controller
         if($request->hasFile('cover') && $request->file('cover')->isValid()){
             $file = $request->file('cover');
             $path = $file->store('speakers','public');
-            $speaker->cover = $file->hashName(); 
+            $speaker->cover = $file->hashName();
         }
         $state = $speaker->save();
     }else{
@@ -319,7 +321,7 @@ class RootController extends Controller
         if($request->hasFile('cover') && $request->file('cover')->isValid()){
             $file = $request->file('cover');
             $path = $file->store('speakers','public');
-            $speaker->cover = $file->hashName(); 
+            $speaker->cover = $file->hashName();
         }
 
         $state = $speaker->save();
@@ -331,7 +333,7 @@ class RootController extends Controller
 
         if($request->idActivity == null){
 
-        $activity = new Activity(); 
+        $activity = new Activity();
 
         $activity->idEvent = $request->idEvent;
         $activity->idCalendar = $request->idCalendar;
@@ -344,7 +346,7 @@ class RootController extends Controller
         $activity->idCalendar = $request->idCalendar;
         $activity->activity = $request->name;
         $activity->time = $request->time_s.' - '. $request->time_e;
-       
+
         $state = $activity->save();
     }
     return $state;
@@ -360,7 +362,7 @@ class RootController extends Controller
         } catch (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             // Gérer l'exception si aucun enregistrement n'a été trouvé
             $errorMessage = 'Programme introuvable.';
-            return redirect()->back()->with('errorMessage', $errorMessage);  
+            return redirect()->back()->with('errorMessage', $errorMessage);
         }
     }
 
@@ -375,7 +377,7 @@ class RootController extends Controller
         } catch (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             // Gérer l'exception si aucun enregistrement n'a été trouvé
             $errorMessage = 'Partenaire introuvable.';
-            return redirect()->back()->with('errorMessage', $errorMessage);  
+            return redirect()->back()->with('errorMessage', $errorMessage);
         }
     }
 
@@ -389,7 +391,7 @@ class RootController extends Controller
         } catch (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             // Gérer l'exception si aucun enregistrement n'a été trouvé
             $errorMessage = 'Partenaire introuvable.';
-            return redirect()->back()->with('errorMessage', $errorMessage);  
+            return redirect()->back()->with('errorMessage', $errorMessage);
         }
     }
 
@@ -404,14 +406,14 @@ class RootController extends Controller
     }
     public function storePartner(Request $request){
         if($request->id == null){
-        $partner = new Partner(); 
+        $partner = new Partner();
         $partner->name = $request->name;
         $partner->description = $request->description;
 
         if($request->hasFile('cover') && $request->file('cover')->isValid()){
             $file = $request->file('cover');
             $path = $file->store('partners','public');
-            $partner->cover = $file->hashName(); 
+            $partner->cover = $file->hashName();
         }
 
         $state = $partner->save();
@@ -423,7 +425,7 @@ class RootController extends Controller
         if($request->hasFile('cover') && $request->file('cover')->isValid()){
             $file = $request->file('cover');
             $path = $file->store('partners','public');
-            $partner->cover = $file->hashName(); 
+            $partner->cover = $file->hashName();
         }
        $state = $partner->save();
     }
@@ -440,7 +442,7 @@ class RootController extends Controller
         } catch (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             // Gérer l'exception si aucun enregistrement n'a été trouvé
             $errorMessage = 'Partenaire introuvable.';
-            return redirect()->back()->with('errorMessage', $errorMessage);  
+            return redirect()->back()->with('errorMessage', $errorMessage);
         }
     }
 
@@ -448,7 +450,7 @@ class RootController extends Controller
 
      public function storeMember(Request $request){
         if($request->idMember == null){
-        $member = new Member(); 
+        $member = new Member();
         $member->name = $request->name;
         $member->email = $request->email;
         $member->job = $request->job;
@@ -458,7 +460,7 @@ class RootController extends Controller
         if($request->hasFile('cover') && $request->file('cover')->isValid()){
             $file = $request->file('cover');
             $path = $file->store('members','public');
-            $member->cover = $file->hashName(); 
+            $member->cover = $file->hashName();
         }
         $state= $member->save();
     }else{
@@ -472,7 +474,7 @@ class RootController extends Controller
         if($request->hasFile('cover') && $request->file('cover')->isValid()){
             $file = $request->file('cover');
             $path = $file->store('members','public');
-            $member->cover = $file->hashName(); 
+            $member->cover = $file->hashName();
         }
         $state= $member->save();
 
@@ -490,7 +492,7 @@ class RootController extends Controller
         } catch (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             // Gérer l'exception si aucun enregistrement n'a été trouvé
             $errorMessage = 'Membre introuvable.';
-            return redirect()->back()->with('errorMessage', $errorMessage);  
+            return redirect()->back()->with('errorMessage', $errorMessage);
         }
     }
 
@@ -527,6 +529,18 @@ class RootController extends Controller
         ->withHome($home);
     }
 
+    public function getWaitingPaymentList(){
+        $home = Home::get()->first();
+        $attendees = Attendee::join('events', 'events.idEvent', '=', 'attendees.idEvent')
+            ->select('events.*','attendees.*' )
+            ->where('waiting', '0')
+            ->orderByDesc('attendees.created_at')
+            ->get();
+        return view('roots.waitingPaymentList')
+            ->withAttendees($attendees)
+            ->withHome($home);
+    }
+
     public function getAdvertises(){
 
         return view('roots.advertises');
@@ -554,14 +568,14 @@ class RootController extends Controller
 
      public function storeEventGallery(Request $request){
 
-        $gallery = new Gallery(); 
+        $gallery = new Gallery();
 
         $gallery->idEvent = $request->idEvent;
         $gallery->description = $request->description;
          if($request->hasFile('cover') && $request->file('cover')->isValid()){
             $file = $request->file('cover');
             $path = $file->store('galleries','public');
-            $gallery->cover = $file->hashName(); 
+            $gallery->cover = $file->hashName();
         }
 
         return $gallery->save();
@@ -576,8 +590,38 @@ class RootController extends Controller
         } catch (Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
             // Gérer l'exception si aucun enregistrement n'a été trouvé
             $errorMessage = 'Image introuvable.';
-            return redirect()->back()->with('errorMessage', $errorMessage);  
+            return redirect()->back()->with('errorMessage', $errorMessage);
         }
     }
 
+    public function checkPayment($slug){
+        $attendee = Attendee::where('slug', $slug)->first();
+        $home = Home::get()->first();
+        return view('roots.checkPayment', compact('attendee', 'home'));
+    }
+
+    public function saveCheckPayment(Request $request){
+        $attendde = Attendee::find($request->idAttendee);
+        $data = array(
+            'slug'=>$attendde->slug,
+        );
+        if($request->action == 'valid'){
+            $attendde->payed = 1;
+            Mail::to($attendde->email)->send(new CustomMail($data, 'mails.confirmPay', 'Confirmation de Payement'));
+        }
+        if($request->action == 'invalid'){
+            $this->validate(request(), [
+                'comment' => 'required',
+            ]);
+            $data['comment']=$request->comment;
+            //dd($data);
+            $attendde->payed = 0;
+            $attendde->check_comment = $request->comment;
+            Mail::to($attendde->email)->send(new CustomMail($data, 'mails.invalidPay', 'Confirmation de Payement'));
+        }
+        $attendde->waiting = 1;
+        $attendde->save();
+
+        return redirect()->route('waiting-payment-list');
+    }
 }

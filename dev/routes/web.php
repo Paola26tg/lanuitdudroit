@@ -23,8 +23,11 @@ Route::get('/events','UserController@getEvents')->name('events');
 Route::get('/event-details/{idEvent}','UserController@getEventDetails')->name('event-details');
 Route::get('/contact','UserController@getContact')->name('contact');
 Route::get('/attendForm','UserController@getAttendForm')->name('attend-form');
+Route::get('/confirmPayment/{slug}','UserController@confirPayment')->name('confirm-payment');
+Route::post('/saveconfirmPayment','UserController@saveConfirmPayment')->name('save-confirm-payment');
 Route::post('/storeAttend','UserController@storeAttend')->name('store-attend');
 Route::post('/contact-us','UserController@postContact')->name('contact-us');
+
 
 
 //Roots routes
@@ -45,7 +48,7 @@ Route::prefix('ndd-admin')->group(function(){
     Route::get('/delete-event/{idEvent}','RootController@deleteEvent')->name('delete-event');
 
     Route::get('/event-calendar-speaker-list/{calendarID}','RootController@getEventCalendarSpeakerList')->name('event-calendar-speaker-list');
-    
+
     Route::post('/storeEventCalendarSpeaker','RootController@storeEventCalendarSpeaker')->name('store-event-calendar-speaker');
 
     Route::get('/event-calendar-activity-list/{calendarID}','RootController@getEventCalendarActivityList')->name('event-calendar-activity-list');
@@ -79,6 +82,10 @@ Route::prefix('ndd-admin')->group(function(){
     Route::get('/event-gallery-list/{eventID}','RootController@getEventGalleryList')->name('event-gallery-list');
     Route::post('/storeEventGallery','RootController@storeEventGallery')->name('store-event-gallery');
     Route::get('/delete-gallery/{idGallery}','RootController@deleteGallery')->name('delete-gallery');
+
+    Route::get('/checkPayment/{slug}','RootController@checkPayment')->name('check-payment');
+    Route::post('/saveCheckPayment','RootController@saveCheckPayment')->name('save-check-payment');
+    Route::get('/waitingPaymentList','RootController@getWaitingPaymentList')->name('waiting-payment-list');
 
      });
 });

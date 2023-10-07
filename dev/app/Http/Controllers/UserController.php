@@ -12,6 +12,7 @@ use App\Models\Partner;
 use App\Models\Attendee;
 use App\Models\Member;
 use App\Models\Gallery;
+use Illuminate\Support\Facades\DB;
 use Mail;
 
 
@@ -21,7 +22,7 @@ class UserController extends Controller
      public function getHome()
     {
         $home = Home::get()->first();
-       
+
         $event = Event::where('isEnable', true)->get()->first();
         $events = Event::latest()->take(3)->get();
         $calendars = null;
@@ -41,7 +42,7 @@ class UserController extends Controller
         ->withSpeakers($speakers)
         ->withPartners($partners)
         ->withHome($home);
-    
+
     }
 
     public function getAbout()
@@ -109,6 +110,22 @@ class UserController extends Controller
        $attendee->age = $request->age;
        $attendee->source = $request->source;
        $attendee->comment = $request->comment;
+       $attendee->is_student = $request->is_student;
+
+        $include_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        /* Uncomment below to include symbols */
+        /* $include_chars .= "[{(!@#$%^/&*_+;?\:)}]"; */
+        $charLength = strlen($include_chars);
+        $randomString = '';
+
+        do {
+            for ($i = 0; $i < 120; $i++) {
+                $randomString .= $include_chars [rand(0, $charLength - 1)];
+            }
+        } while (self::slugExisteDeja($randomString));
+
+        $attendee->slug = $randomString;
+
 
        $event = Event::where('idEvent', $request->idEvent)
            ->first();
@@ -117,7 +134,8 @@ class UserController extends Controller
             'name'=>$attendee->name,
             'event'=>$event->eventTitle,
             'date'=>$event->start,
-            'lieu'=>$event->location
+            'lieu'=>$event->location,
+            'slug'=>$attendee->slug
         );
         Mail::to($attendee->email)->send(new CustomMail($data, 'mails.inscription', 'Confirmation d\'Inscription à la Nuit du Droit - 18 Novembre'));
 
@@ -134,5 +152,31 @@ class UserController extends Controller
         Mail::to('contact@lanuitdudroit.com')->send(new CustomMail($data, 'mails.contact', 'Nouveau message'));
 
         return 1;
+    }
+
+    private static function slugExisteDeja($slug)
+    {
+        return DB::table('attendees')->where('slug', $slug)->exists();
+    }
+
+    public function confirPayment($slug){
+         $attendee = Attendee::where('slug', $slug)->first();
+         return view('users.confirmPayment', compact('attendee'));
+    }
+
+    public function saveConfirmPayment(Request $request){
+        $this->validate(request(), [
+            'phone' => 'required',
+            'reference' => 'required',
+        ]);
+
+        $attendee = Attendee::find($request->idAttendee);
+        $attendee->phone_transaction = $request->phone;
+        $attendee->waiting = 0;
+        $attendee->reference_transaction = $request->reference;
+
+        $attendee->save();
+
+        return view('users.confirmSuccess');
     }
 }

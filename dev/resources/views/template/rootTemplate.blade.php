@@ -60,7 +60,7 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{asset('roots/assets/js/config.js')}}"></script>
-    
+
 
   </head>
 
@@ -146,7 +146,7 @@
             <li class="menu-header small text-uppercase">
               <span class="menu-header-text">Pages</span>
             </li>
-            
+
             <!-- Cards -->
             <li class="menu-item {{isActiveLink(['events-list'])}}">
               <a href="{{route('events-list')}}" class="menu-link">
@@ -166,6 +166,12 @@
                 <div data-i18n="Basic">Participants</div>
               </a>
             </li>
+              <li class="menu-item {{isActiveLink(['waiting-payment-list'])}} {{isActiveLink(['check-payment'])}}">
+                  <a href="{{route('waiting-payment-list')}}" class="menu-link">
+                      <i class="menu-icon tf-icons bx bxs-dollar-circle"></i>
+                      <div data-i18n="Basic">Vérify Payment</div>
+                  </a>
+              </li>
             <li class="menu-item {{isActiveLink(['partners-list'])}}">
               <a href="{{route('partners-list')}}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-briefcase"></i>
@@ -185,7 +191,7 @@
                 <label class="form-check-label" for="flexSwitchCheckChecked">Mode maintenance </label>
               </div>
             </li>
-           
+
           </ul>
         </aside>
         <!-- / Menu -->
@@ -239,7 +245,7 @@
                               <i class='bx bx-user-circle' style="font-size:40px;"></i>
                             </div>
                           </div>
-                         
+
                           <div class="flex-grow-1">
                             <span class="fw-semibold d-block">{{Auth::user()->name}}</span>
                             <small class="text-muted">{{Auth::user()->email}}</small>
@@ -262,7 +268,7 @@
                         <span class="align-middle">Paramêtres</span>
                       </a>
                     </li>
-                    
+
                     <li>
                       <div class="dropdown-divider"></div>
                     </li>
@@ -299,7 +305,7 @@
                   , POWERED by
                   <a href="https://biziyee.com" target="_blank" class="footer-link fw-bolder"> BIZIYEE TECHNOLOGIE & COMMUNICATION</a>
                 </div>
-               
+
               </div>
             </footer>
             <!-- / Footer -->
@@ -339,8 +345,8 @@
     <script src="{{asset('roots/assets/js/dashboards-analytics.js')}}"></script>
     <script src="{{asset('js/axios.js')}}"></script>
 
-   
-   
+
+
     @yield('scripts')
 
     <!-- Place this tag in your head or just before your close body tag. -->
@@ -352,11 +358,11 @@
                    $('.active').closest('ul').parent().addClass('open');
                 };
                 let toast = $('#deletetoast');
-				 
+
               setTimeout(function() {
                 toast.hide();
               }, 3000);
-              
+
              })
     </script>
   </body>

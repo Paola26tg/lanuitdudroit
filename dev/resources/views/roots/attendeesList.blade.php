@@ -5,7 +5,7 @@ Participants - Liste  | Administration NDD
 @section('content')
 @section('content')
 <!-- Content wrapper -->
- 
+
           <div class="content-wrapper">
             <!-- Content -->
 
@@ -21,7 +21,7 @@ Participants - Liste  | Administration NDD
                         </div>
                     </div>
                     <div class="card-body">
-                       
+
 
                         <div class="table-responsive">
                             <table id="add-row" class="display table" >
@@ -40,7 +40,7 @@ Participants - Liste  | Administration NDD
                                         <th style="width: 10%">Action</th>
                                     </tr>
                                 </thead>
-                               
+
                                 <tbody>
                                 @php
                                     $i = 1;
@@ -57,7 +57,7 @@ Participants - Liste  | Administration NDD
                                         <td>{{$attendee->adresse}}</td>
                                          <td >{{$attendee->age}}</td>
                                         <td>{{$attendee->comment}}</td>
-                                        
+
                                         <td>
 
                                             <div class="form-button-action">
@@ -67,7 +67,7 @@ Participants - Liste  | Administration NDD
                                             </div>
                                         </td>
                                     </tr>
-         
+
                                     @php
                                     $i++;
                                     @endphp
@@ -75,7 +75,7 @@ Participants - Liste  | Administration NDD
                                     @php
                                     endforeach;
                                     @endphp
-                                  
+
                                 </tbody>
                             </table>
                         </div>
@@ -101,5 +101,5 @@ Participants - Liste  | Administration NDD
 </script>
 <!-- Page JS -->
     <script src="{{asset('roots/assets/js/pages-account-settings-account.js')}}"></script>
- 
+
 @endsection

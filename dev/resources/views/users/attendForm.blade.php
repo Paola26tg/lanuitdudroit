@@ -1,6 +1,6 @@
 @extends('template.userTemplate')
 @section('title')
-Formulaire de participation | La nuit Du Droit 
+Formulaire de participation | La nuit Du Droit
 @endsection
 @section('styles')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -71,7 +71,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.9/dist/sweetalert2.min.css
                                     <option value="31-40ans">31-40ans</option>
                                     <option value="41-50ans">41-50ans</option>
                                     <option value="51 et +">51 et +</option>
-                                   
+
                                 </select>
                             </div>
                             <div class="col-lg-6 mb-4">
@@ -87,12 +87,19 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.9/dist/sweetalert2.min.css
                                 </select>
                             </div>
 
+                            <div class="col-lg-12" style="margin-bottom: 1.5rem">
+                                <input class="form-check-input" type="checkbox" value="" id="is_student" name="is_student" style="width: 0.5rem; height: 1.7rem; margin-left: 0 !important">
+                                <label class="form-check-label" for="is_student" style="margin-left: 2.5rem; margin-top: 0.5rem">
+                                    Je suis étudiant
+                                </label>
+                            </div>
+
                             <div class="col-lg-12">
                                  <label for="exampleFormControlInput1" class="form-label">Quelle est votre motivation à participer à cette conférence?</label>
                                  <textarea placeholder="Messages" name="comment" rows="2"  ></textarea>
                             </div>
                             <div class="col-lg-12 text-center">
-                             
+
                                 <button type="submit" class="site-btn ">
                                      <span class="loadActive" role="status" aria-hidden="true"></span>
                                     Participer
@@ -124,12 +131,17 @@ $("#attendEvent").submit(function(e){
 })
   });
         function attendSubmit(){
-        
-        
-        let form = $('#attendEvent')[0];
-        let data = new FormData(form);
-        $('.loadActive').addClass('spinner-border')
-    $.ajax({
+
+            let form = $('#attendEvent')[0];
+            let data = new FormData(form);
+            let checkedValue = "0";
+            let yes = document.getElementById("is_student");
+            if (yes.checked == true){
+                checkedValue = "1"
+            }
+            data.set("is_student", checkedValue);
+            $('.loadActive').addClass('spinner-border')
+        $.ajax({
                     type: 'POST',
                     url: '{{ route("store-attend") }}',
                     data: data,
@@ -173,7 +185,7 @@ $("#attendEvent").submit(function(e){
                                     showCancelButton: false,
                                     cancelButtonText:  'D\'accord!'
                                   })
-                       
+
                     }
 
                 })

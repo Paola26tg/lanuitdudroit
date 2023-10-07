@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="{{asset('users/css/magnific-popup.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('users/css/slicknav.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('users/css/style.css')}}" type="text/css">
+
 </head>
 
 <body>
@@ -31,7 +32,7 @@
     <div id="preloder">
         <div class="loader"></div>
     </div>
-   
+
 
     <!-- Header Section Begin -->
     <header class="header-section header-normal">
@@ -59,9 +60,9 @@
     </header>
     <!-- Header End -->
 
-  
+
         @yield('content')
-          
+
     <!-- Footer Section Begin -->
 
     <footer class="footer-section bg-white">
@@ -88,7 +89,7 @@
                             <a href=" https://twitter.com/Nddtogo"><i class="fa fa-twitter"></i></a>
                             <a href=" https://www.linkedin.com/company/la-nuit-du-droit-togo-1er-edition/?viewAsMember=true"><i class="fa fa-linkedin"></i></a>
                             <a href="https://www.instagram.com/la_nuit_du_droit_togo/"><i class="fa fa-instagram"></i></a>
-                           
+
                         </div>
                     </div>
                 </div>

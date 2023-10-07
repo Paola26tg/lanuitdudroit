@@ -62,6 +62,17 @@
     <p>
         Nous sommes impatients de vous accueillir à cet événement passionnant. Merci de votre participation !
     </p>
+    <p>Pour confirmer votre inscription, veuillez suivre les étapes suivantes:
+        <ul>
+        <li>1. Payez les frais de participation part tmoney sur le numéro 91000000;</li>
+        <li>
+            2. Cliquez sur le lien ci dessous pour confirmaer le paiement avec le numéro de référence de la transaction;<br>
+            <a href="{{route('confirm-payment', ['slug'=>$data['slug']])}}">Confirmez votre paiement</a>
+        </li>
+        <li>3. Téléchargez votre passe via le lien que nous vous enverrons.</li>
+    </ul>
+    </p>
+
     <p>
         Cordialement,
     </p>
