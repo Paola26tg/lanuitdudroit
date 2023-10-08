@@ -44,6 +44,13 @@
     <p>Nous venons par ce mail confirmer votre paiement pour l'évènement La Nuit Du Droit</p>
     <p>Vous pouvez télécharger votre billet en cliquant sur le lien ci-dessous</p>
 
+    <a href="{{route('my-ticket', ['slug'=>$data['slug']])}}">Télécharger mon ticket</a>
+
+    <p>
+        L'équipe de la NDD
+        contact@lanuitdudroit.com
+    </p>
+
     <!-- <a href="#" class="button">Confirmer l'adresse e-mail</a>-->
     <!--<p>Si vous n'avez pas créé de compte sur notre site, veuillez ignorer ce message.</p>
     <p>Merci de nous avoir rejoints!</p>-->

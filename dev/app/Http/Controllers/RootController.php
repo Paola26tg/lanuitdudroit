@@ -17,6 +17,7 @@ use App\Models\Attendee;
 use App\Models\Member;
 use App\Models\Gallery;
 use Mail;
+use PDF;
 
 
 

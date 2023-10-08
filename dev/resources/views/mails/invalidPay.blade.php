@@ -50,6 +50,11 @@
     <p>Vous pouvez tout de même reconfirmer votre paiement en cliquant sur le lien ci-dessous: <br></p>
     <a href="{{route('confirm-payment', ['slug'=>$data['slug']])}}">Confirmez votre paiement</a>
 
+    <p>
+        L'équipe de la NDD
+        contact@lanuitdudroit.com
+    </p>
+
     <!-- <a href="#" class="button">Confirmer l'adresse e-mail</a>-->
     <!--<p>Si vous n'avez pas créé de compte sur notre site, veuillez ignorer ce message.</p>
     <p>Merci de nous avoir rejoints!</p>-->

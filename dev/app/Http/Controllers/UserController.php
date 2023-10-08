@@ -14,6 +14,7 @@ use App\Models\Member;
 use App\Models\Gallery;
 use Illuminate\Support\Facades\DB;
 use Mail;
+use PDF;
 
 
 
@@ -178,5 +179,22 @@ class UserController extends Controller
         $attendee->save();
 
         return view('users.confirmSuccess');
+    }
+
+    public function myTicket($slug){
+        $attendde = Attendee::where('slug', $slug)
+            ->first();
+        if($attendde->payed == 0){
+            abort(404);
+        }
+        $data = [
+            'reference'=>$attendde->reference_transaction,
+            'name'=> $attendde->name,
+        ];
+        $customPaper = array(0,0,360,740);
+        $pdf = PDF::loadView('reports.ticket', $data)->setPaper($customPaper);
+        //$pdf = PDF::loadView('reports.ticket', $data);
+        return $pdf->stream('ticket_'.$attendde->slug.'.pdf');
+        //return view('reports.ticket');
     }
 }

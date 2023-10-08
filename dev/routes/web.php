@@ -27,6 +27,8 @@ Route::get('/confirmPayment/{slug}','UserController@confirPayment')->name('confi
 Route::post('/saveconfirmPayment','UserController@saveConfirmPayment')->name('save-confirm-payment');
 Route::post('/storeAttend','UserController@storeAttend')->name('store-attend');
 Route::post('/contact-us','UserController@postContact')->name('contact-us');
+Route::post('/contact-us','UserController@postContact')->name('contact-us');
+Route::get('/myTicket/{slug}','UserController@myTicket')->name('my-ticket');
 
 
 
